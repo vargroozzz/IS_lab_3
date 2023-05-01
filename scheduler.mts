@@ -27,7 +27,7 @@ export class Scheduler {
       }
       const selection = this.performSelection(basePopulation);
       const offspring = [...Array(this.offspring).fill(0)].map((_) =>
-        this.mutate(this.crossover(selection))
+        this.mutate(this.crossover(selection as [TimeTable, TimeTable]))
       );
       if (step % 10000 === 0) {
         console.log(`generation step:${step}`);
@@ -54,17 +54,13 @@ export class Scheduler {
     );
   }
 
-  private crossover(parents: TimeTable[]): Offspring {
+  private crossover(parents: [TimeTable, TimeTable]): Offspring {
     const crossoverPoint = Math.floor(
       Math.random() * parents[0].schedule.length
     );
     const offspring = new TimeTable([...parents[0].schedule]);
     [...new Array(crossoverPoint)].forEach((_, i) => {
-      if (Math.random() > 0.5) {
-        offspring.schedule[i] = parents[1].schedule[i];
-      } else {
-        offspring.schedule[i] = parents[0].schedule[i];
-      }
+      offspring.schedule[i] = parents[1].schedule[i];
     });
     return offspring;
   }
