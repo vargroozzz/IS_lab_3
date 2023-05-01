@@ -19,41 +19,29 @@ export class Lecture {
     return this.maxStudents > this.auditory.capacity ? 1 : 0;
   }
 
-  conflicts(p: Lecture): number {
+  conflicts(p: Lecture) {
     if (!(p.day === this.day && p.timing === this.timing)) {
       return 0;
     }
-    let conflicts = 0;
-    // auditory conflict
-    if (
-      this.auditory === p.auditory &&
+
+    const auditoryConflict = this.auditory === p.auditory &&
       (p.group !== this.group ||
         p.lecturer !== this.lecturer ||
         p.science !== this.science ||
-        p.type !== this.type)
-    ) {
-      conflicts += 1;
-    }
-    // group conflict
-    if (
-      this.group === p.group &&
+        p.type !== this.type) ? 1 : 0;
+
+    const groupConflict = this.group === p.group &&
       (this.auditory !== p.auditory ||
         p.lecturer !== this.lecturer ||
         p.science !== this.science ||
-        p.type !== this.type)
-    ) {
-      conflicts += 1;
-    }
-    // lecturer conflict
-    if (
-      this.lecturer === p.lecturer &&
+        p.type !== this.type) ? 1 : 0;
+
+    const lecturerConflict = this.lecturer === p.lecturer &&
       (this.auditory !== p.auditory ||
         p.group !== this.group ||
         p.science !== this.science ||
-        p.type !== this.type)
-    ) {
-      conflicts += 1;
-    }
-    return conflicts;
+        p.type !== this.type) ? 1 : 0;
+
+    return (auditoryConflict + groupConflict + lecturerConflict) as 0 | 1 | 2 | 3;
   }
 }
